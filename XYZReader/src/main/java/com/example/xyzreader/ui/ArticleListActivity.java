@@ -20,6 +20,7 @@ import android.text.format.DateUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.xyzreader.R;
@@ -43,7 +44,7 @@ import org.greenrobot.eventbus.ThreadMode;
  * activity presents a grid of items as cards.
  */
 public class ArticleListActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>, SwipeRefreshLayout.OnRefreshListener {
 
     private Toolbar mToolbar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -58,9 +59,13 @@ public class ArticleListActivity extends AppCompatActivity implements
         this.setSupportActionBar(mToolbar);
 
 
-        final View toolbarContainerView = findViewById(R.id.toolbar_container);
+        //final View toolbarContainerView = findViewById(R.id.toolbar_container);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+
+
 
         mRecyclerView = (EmptyRecyclerView) findViewById(R.id.recycler_view);
         getLoaderManager().initLoader(0, null, this);
@@ -91,16 +96,17 @@ public class ArticleListActivity extends AppCompatActivity implements
     private boolean mIsRefreshing = false;
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(RefreshingEvent event) {
+    public void onMessage(RefreshingEvent event) {
 
         mIsRefreshing = event.isBool();
         updateRefreshingUI();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(NotRefreshingEvent event) {
+    public void onMessage(NotRefreshingEvent event) {
 
         mIsRefreshing = event.isBool();
+        //Toast.makeText(this,"Value "+mIsRefreshing,Toast.LENGTH_SHORT).show();
         updateRefreshingUI();
     }
 
@@ -138,6 +144,13 @@ public class ArticleListActivity extends AppCompatActivity implements
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mRecyclerView.setAdapter(null);
+    }
+
+    @Override
+    public void onRefresh() {
+
+            startService(new Intent(this, UpdaterService.class));
+
     }
 
     private class Adapter extends RecyclerView.Adapter<ViewHolder> {
