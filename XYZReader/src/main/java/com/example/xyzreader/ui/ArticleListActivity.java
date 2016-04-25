@@ -1,28 +1,20 @@
 package com.example.xyzreader.ui;
 
 import android.app.LoaderManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
@@ -30,8 +22,6 @@ import com.example.xyzreader.data.UpdaterService;
 import com.example.xyzreader.events.NotRefreshingEvent;
 import com.example.xyzreader.events.RefreshingEvent;
 import com.example.xyzreader.widget.EmptyRecyclerView;
-import com.github.florent37.glidepalette.BitmapPalette;
-import com.github.florent37.glidepalette.GlidePalette;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
