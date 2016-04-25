@@ -30,6 +30,8 @@ import com.example.xyzreader.data.UpdaterService;
 import com.example.xyzreader.events.NotRefreshingEvent;
 import com.example.xyzreader.events.RefreshingEvent;
 import com.example.xyzreader.widget.EmptyRecyclerView;
+import com.github.florent37.glidepalette.BitmapPalette;
+import com.github.florent37.glidepalette.GlidePalette;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

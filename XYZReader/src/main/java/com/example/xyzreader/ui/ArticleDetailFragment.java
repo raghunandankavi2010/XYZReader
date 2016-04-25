@@ -3,7 +3,6 @@ package com.example.xyzreader.ui;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.LoaderManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
@@ -20,7 +19,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -31,13 +29,8 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
-import com.github.florent37.glidepalette.BitmapPalette;
-import com.github.florent37.glidepalette.GlidePalette;
 
 /**
  *
@@ -66,9 +59,6 @@ public class ArticleDetailFragment extends Fragment implements
     private int mScrollY;
     private boolean mIsCard = false;
     private int mStatusBarFullOpacityBottom;
-    private int width;
-
-
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -126,12 +116,6 @@ public class ArticleDetailFragment extends Fragment implements
                 mTopInset = insets.top;
             }
         });*/
-
-        DisplayMetrics metrics = getResources().getDisplayMetrics();
-
-        width = metrics.widthPixels;
-
-        double aspectRatio = (double)600/ (double) 600;
 
         final Toolbar toolbar = (Toolbar) mRootView.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
@@ -229,29 +213,7 @@ public class ArticleDetailFragment extends Fragment implements
                             + mCursor.getString(ArticleLoader.Query.AUTHOR)
                             + "</font>"));
             bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY)));
-
-          /*  Glide.with(this).load(mCursor.getString(ArticleLoader.Query.PHOTO_URL))
-                    .asBitmap()
-                    .transform(new MyTransformation(getActivity()))
-
-                    .listener(GlidePalette.with(mCursor.getString(ArticleLoader.Query.PHOTO_URL)
-                    .use(GlidePalette.Profile.VIBRANT)
-                     .intoBackground(
-                             mRootView.findViewById(R.id.meta_bar), GlidePalette.Swatch.RGB);
-                    .into(mPhotoView);*/
-
-            Glide.with(this).load(mCursor.getString(ArticleLoader.Query.PHOTO_URL))
-            .asBitmap()
-                    .fitCenter()
-                    .listener(GlidePalette.with(mCursor.getString(ArticleLoader.Query.PHOTO_URL))
-
-                            .use(GlidePalette.Profile.VIBRANT)
-                            .intoBackground(mRootView.findViewById(R.id.meta_bar), GlidePalette.Swatch.RGB)
-                            .intoTextColor(titleView, GlidePalette.Swatch.BODY_TEXT_COLOR)
-                            .crossfade(true)
-                    ).into(mPhotoView);
-
-           /* ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
+            ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
                     .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
                         @Override
                         public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
@@ -273,7 +235,7 @@ public class ArticleDetailFragment extends Fragment implements
                         public void onErrorResponse(VolleyError volleyError) {
 
                         }
-                    });*/
+                    });
         } else {
             mRootView.setVisibility(View.GONE);
             titleView.setText("N/A");
@@ -323,34 +285,6 @@ public class ArticleDetailFragment extends Fragment implements
                 : mPhotoView.getHeight() - mScrollY;
     }
 
-    private class MyTransformation extends BitmapTransformation {
 
-        public MyTransformation(Context context) {
-            super(context);
-        }
-
-        @Override
-        protected Bitmap transform(BitmapPool pool, Bitmap source,
-                                   int outWidth, int outHeight) {
-            int targetWidth = width;
-            //int targetHeight = holder.iv.getHeight();
-            Log.i("GalleryAdapter","Source  Height/Width"+source.getHeight() +" "+ source.getWidth());
-            double aspectRatio = (double) source.getHeight() / (double) source.getWidth();
-            int targetHeight = (int) (width  * aspectRatio);
-            //int targetWidth = (int) (getResources().getDimension(R.dimen.detail_backdrop_height)  * aspectRatio);
-            Bitmap result = Bitmap.createScaledBitmap(source, targetWidth, targetHeight, false);
-            if (result != source) {
-                // Same bitmap is returned if sizes are the same
-                source.recycle();
-            }
-            return result;
-        }
-
-        @Override
-        public String getId() {
-            // Return some id that uniquely identifies your transformation.
-            return "com.example.xyzreader.MyTransformation";
-        }
-    }
 
 }
